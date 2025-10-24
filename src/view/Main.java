@@ -18,24 +18,6 @@ public final class Main extends javax.swing.JFrame {
     private Login login;
     private Registro registro;
     
-    Conexao conexao = new Conexao(this);
-    trocarTela(conexao);
-
-    public void setConexao() {
-    Conexao conexao = new Conexao(this); 
-    trocarTela(conexao);
-}
-
-    public void abrirChat(Socket socket, String nomeUsuario) {
-    ChatManual chat = new ChatManual(socket, nomeUsuario);
-    getContentPane().removeAll();
-    setLayout(new BorderLayout());
-    add(chat, BorderLayout.CENTER);
-    revalidate();
-    repaint();
-}
-
-    
     public Main() {
         initComponents();
         setMinimumSize(new Dimension(812, 400));
@@ -44,6 +26,14 @@ public final class Main extends javax.swing.JFrame {
         setVisible(true);
         setLogin();
     }
+    
+    public String getNomeUsuario() {
+    if (login != null) {
+        return login.getNomeUsuario();
+    }
+    return null;
+}
+
     
     public void setLogin() {
         if (login == null) {
@@ -67,13 +57,14 @@ public final class Main extends javax.swing.JFrame {
     }
     
     public void abrirChat(Socket socket, String nomeUsuario) {
-        ChatManual chat = new ChatManual(socket, nomeUsuario);
-        getContentPane().removeAll(); 
-        setLayout(new BorderLayout()); 
-        add(chat, BorderLayout.CENTER);
-        revalidate();
-        repaint();
+    ChatManual chat = new ChatManual(socket, nomeUsuario);
+    getContentPane().removeAll(); 
+    setLayout(new BorderLayout()); 
+    add(chat, BorderLayout.CENTER);
+    revalidate();
+    repaint();
 }
+
     
     /**
      * This method is called from within the constructor to initialize the form.

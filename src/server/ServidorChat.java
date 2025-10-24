@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ServidorChat {
     private static final int PORTA = 12345;
-    private static final List<PrintWriter> clientes = Collections.synchronizedList(new ArrayList<>());
+    private static final Set<PrintWriter> clientes = Collections.synchronizedSet(new HashSet<>());
 
     public static void main(String[] args) {
         System.out.println("Servidor de chat iniciado na porta " + PORTA);
@@ -20,41 +20,53 @@ public class ServidorChat {
             while (true) {
                 Socket cliente = servidor.accept();
                 System.out.println("Novo cliente conectado: " + cliente.getInetAddress());
-
-                PrintWriter out = new PrintWriter(cliente.getOutputStream(), true);
-                clientes.add(out);
-
-                Thread t = new Thread(() -> tratarCliente(cliente, out));
-                t.start();
+                new Thread(new ClienteHandler(cliente)).start();
             }
         } catch (IOException e) {
-            System.out.println("Erro no servidor: " + e.getMessage());
+            System.err.println("Erro no servidor: " + e.getMessage());
         }
     }
 
-    private static void tratarCliente(Socket cliente, PrintWriter out) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(cliente.getInputStream()))) {
-            String msg;
-            while ((msg = in.readLine()) != null) {
-                System.out.println("Recebido: " + msg);
-                enviarParaTodos("Cliente diz: " + msg);
-            }
-        } catch (IOException e) {
-            System.out.println("Cliente desconectado.");
-        } finally {
-            clientes.remove(out);
-            try {
-                cliente.close();
+    private static class ClienteHandler implements Runnable {
+        private final Socket socket;
+        private PrintWriter writer;
+
+        public ClienteHandler(Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run() {
+            try (
+                Scanner reader = new Scanner(socket.getInputStream());
+            ) {
+                writer = new PrintWriter(socket.getOutputStream(), true);
+                clientes.add(writer);
+
+                while (reader.hasNextLine()) {
+                    String mensagem = reader.nextLine();
+                    System.out.println("Recebido: " + mensagem);
+                    broadcast(mensagem);
+                }
             } catch (IOException e) {
-                System.out.println("Erro ao fechar conexão: " + e.getMessage());
+                System.err.println("Erro com cliente: " + e.getMessage());
+            } finally {
+                if (writer != null) {
+                    clientes.remove(writer);
+                }
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    System.err.println("Erro ao fechar socket: " + e.getMessage());
+                }
             }
         }
-    }
 
-    private static void enviarParaTodos(String mensagem) {
-        synchronized (clientes) {
-            for (PrintWriter escritor : clientes) {
-                escritor.println(mensagem);
+        private void broadcast(String mensagem) {
+            synchronized (clientes) {
+                for (PrintWriter cliente : clientes) {
+                    cliente.println(mensagem);
+                }
             }
         }
     }

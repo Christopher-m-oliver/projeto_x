@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.Socket;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import view.ChatManual;
 
 /**
  *
@@ -12,15 +11,10 @@ import view.ChatManual;
  */
 public class Conexao extends javax.swing.JPanel {
 
-    private final Main main;
-
     public Conexao() {
         initComponents();
         txtIP.setText("localhost");
         txtPorta.setText("12345");
-        jLabel4 = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
-
 
     }
 
@@ -133,7 +127,9 @@ public class Conexao extends javax.swing.JPanel {
             Socket socket = new Socket(ip, porta);
             JOptionPane.showMessageDialog(this, "Conectado com sucesso!");
             
-            Main main = (Main) SwingUtilities.getWindowAncestor(this); main.abrirChat(socket);
+            Main main = (Main) SwingUtilities.getWindowAncestor(this);
+            String nomeUsuario = main.getNomeUsuario();
+            main.abrirChat(socket, nomeUsuario);  
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Porta Inválida.");
         } catch (IOException e) {

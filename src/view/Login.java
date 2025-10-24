@@ -17,6 +17,11 @@ public class Login extends javax.swing.JPanel {
     public Login() {
         initComponents();
     }
+    
+    public String getNomeUsuario() {
+    return txtEmail.getText();
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -169,7 +174,7 @@ public class Login extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         String email = txtEmail.getText();
-String senha = new String(txtSenha.getPassword());
+        String senha = new String(txtSenha.getPassword());
 
 if (email.isEmpty() || senha.isEmpty()) {
     JOptionPane.showMessageDialog(null, "Preencha todos os campos.");

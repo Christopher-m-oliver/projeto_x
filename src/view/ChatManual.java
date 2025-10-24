@@ -14,9 +14,12 @@ public class ChatManual extends JPanel {
     private final JButton btnEnviar;
     private final Socket socket;
     private final java.io.PrintWriter writer;
+    private final String nomeUsuario;
 
 
     public ChatManual(Socket socket, String nomeUsuario) {
+        this.socket = socket;
+        this.nomeUsuario = nomeUsuario;
         setLayout(new BorderLayout());
         setBackground(new Color(30, 30, 30));
 
@@ -42,7 +45,6 @@ public class ChatManual extends JPanel {
         btnEnviar.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnEnviar.setFocusPainted(false);
         btnEnviar.setBorderPainted(false);
-        this.socket = socket;
         try {
             writer = new java.io.PrintWriter(socket.getOutputStream(), true);
         } catch (java.io.IOException e) {
@@ -68,7 +70,6 @@ public class ChatManual extends JPanel {
         add(scroll, BorderLayout.CENTER);
         add(painelInferior, BorderLayout.SOUTH);
 
-        adicionarMensagem("Christopher", "Olá, mundo!", new Color(0, 255, 85));
     }
 
     private void adicionarMensagem(String usuario, String texto, Color corUsuario) {
