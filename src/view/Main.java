@@ -1,20 +1,40 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.net.Socket;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import view.ChatManual;
 
 /**
  *
  * @author Christopher
  */
-public class Main extends javax.swing.JFrame {
+public final class Main extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Main.class.getName());
 
     private Login login;
     private Registro registro;
+    
+    Conexao conexao = new Conexao(this);
+    trocarTela(conexao);
+
+    public void setConexao() {
+    Conexao conexao = new Conexao(this); 
+    trocarTela(conexao);
+}
+
+    public void abrirChat(Socket socket, String nomeUsuario) {
+    ChatManual chat = new ChatManual(socket, nomeUsuario);
+    getContentPane().removeAll();
+    setLayout(new BorderLayout());
+    add(chat, BorderLayout.CENTER);
+    revalidate();
+    repaint();
+}
+
     
     public Main() {
         initComponents();
@@ -41,11 +61,19 @@ public class Main extends javax.swing.JFrame {
 
     public void trocarTela(JPanel novaTela) {
         jPanel2.removeAll();
-        jPanel2.add(novaTela, java.awt.BorderLayout.CENTER);
+        jPanel2.add(novaTela, BorderLayout.CENTER);
         jPanel2.revalidate();
         jPanel2.repaint();
     }
-
+    
+    public void abrirChat(Socket socket, String nomeUsuario) {
+        ChatManual chat = new ChatManual(socket, nomeUsuario);
+        getContentPane().removeAll(); 
+        setLayout(new BorderLayout()); 
+        add(chat, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+}
     
     /**
      * This method is called from within the constructor to initialize the form.

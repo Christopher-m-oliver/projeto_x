@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import view.ChatManual;
 
 /**
  *
@@ -11,11 +12,16 @@ import javax.swing.SwingUtilities;
  */
 public class Conexao extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Conexao
-     */
+    private final Main main;
+
     public Conexao() {
         initComponents();
+        txtIP.setText("localhost");
+        txtPorta.setText("12345");
+        jLabel4 = new javax.swing.JLabel();
+        txtNome = new javax.swing.JTextField();
+
+
     }
 
     /**
@@ -118,19 +124,16 @@ public class Conexao extends javax.swing.JPanel {
         // TODO add your handling code here:
         String ip = txtIP.getText().trim();
         String portaStr = txtPorta.getText().trim();
-        
-        if (ip.isEmpty() || portaStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
-            return;
-        }
+
+        if (ip.isEmpty()) ip = "localhost";
+        if (portaStr.isEmpty()) portaStr = "12345";
         
         try {
             int porta = Integer.parseInt(portaStr);
             Socket socket = new Socket(ip, porta);
             JOptionPane.showMessageDialog(this, "Conectado com sucesso!");
             
-            Main main = (Main) SwingUtilities.getWindowAncestor(this);
-            main.trocarTela(new Chat(socket));
+            Main main = (Main) SwingUtilities.getWindowAncestor(this); main.abrirChat(socket);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Porta Inválida.");
         } catch (IOException e) {
