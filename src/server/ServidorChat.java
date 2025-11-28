@@ -2,7 +2,7 @@ package server;
 
 /**
  *
- * @author reduz
+ * @author Christopher
  */
 
 import java.io.*;

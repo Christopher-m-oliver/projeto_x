@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author reduz
+ * @author Christopher
  */
 public class Conexao extends javax.swing.JPanel {
 

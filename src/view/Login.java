@@ -4,6 +4,7 @@ import controller.UserControl;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import util.AppPreferences;
 
 /**
  *
@@ -16,6 +17,11 @@ public class Login extends javax.swing.JPanel {
      */
     public Login() {
         initComponents();
+        String savedEmail = AppPreferences.getSavedEmail();
+        if (!savedEmail.isEmpty()) {
+            txtEmail.setText(AppPreferences.getSavedEmail());
+            jCheckBox1.setSelected(AppPreferences.getRememberMeStatus()); 
+        }
     }
     
     public String getNomeUsuario() {
@@ -174,7 +180,13 @@ public class Login extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         String email = txtEmail.getText();
-        String senha = new String(txtSenha.getPassword());
+        boolean rememberMe = jCheckBox1.isSelected();
+        AppPreferences.saveUserEmail(email, rememberMe);
+        
+        char[] senhaChars = txtSenha.getPassword();
+        String senha = new String(senhaChars); 
+        
+
 
 if (email.isEmpty() || senha.isEmpty()) {
     JOptionPane.showMessageDialog(null, "Preencha todos os campos.");
@@ -183,16 +195,21 @@ if (email.isEmpty() || senha.isEmpty()) {
 
 try {
     boolean autenticado = UserControl.autenticarUsuario(email, senha);
+    java.util.Arrays.fill(senhaChars, '0');
+    
     if (autenticado) {
         JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
         new Conexao().setVisible(true);
-        Main main = (Main) SwingUtilities.getWindowAncestor(this); main.trocarTela(new Conexao()); 
+        Main main = (Main) SwingUtilities.getWindowAncestor(this);
+        main.trocarTela(new Conexao()); 
 
     } else {
         JOptionPane.showMessageDialog(null, "Email ou senha incorretos.");
     }
+    
 } catch (IOException e) {
-    JOptionPane.showMessageDialog(null, "Erro ao verificar usuário.");
+    java.util.Arrays.fill(senhaChars, '0');
+    JOptionPane.showMessageDialog(null, "Erro ao verificar usuário: " + e.getMessage());
 }
 
     }//GEN-LAST:event_jButton1ActionPerformed
