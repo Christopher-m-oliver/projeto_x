@@ -10,8 +10,11 @@ import javax.swing.SwingUtilities;
  * @author Christopher
  */
 public class Conexao extends javax.swing.JPanel {
+    
+    private final String nomeUsuario;
 
-    public Conexao() {
+    public Conexao(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
         initComponents();
         txtIP.setText("localhost");
         txtPorta.setText("12345");
@@ -115,7 +118,6 @@ public class Conexao extends javax.swing.JPanel {
     }//GEN-LAST:event_txtPortaActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         String ip = txtIP.getText().trim();
         String portaStr = txtPorta.getText().trim();
 
@@ -128,7 +130,6 @@ public class Conexao extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Conectado com sucesso!");
             
             Main main = (Main) SwingUtilities.getWindowAncestor(this);
-            String nomeUsuario = main.getNomeUsuario();
             main.abrirChat(socket, nomeUsuario);  
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Porta Inválida.");

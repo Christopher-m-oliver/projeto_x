@@ -4,3 +4,7 @@ a@a.com;a
 us2@gmail.com;1234
 a@gmail.com;a
 teste1@a.com;teste
+eusou;teste2@2.com;as
+teste2@2.com;as
+teste3;teste3@r.com;333
+teste3@r.com;333

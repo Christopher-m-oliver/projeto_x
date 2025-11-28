@@ -1,6 +1,8 @@
 package view;
 
 import controller.UserControl;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -25,9 +27,25 @@ public class Login extends javax.swing.JPanel {
     }
     
     public String getNomeUsuario() {
-    return txtEmail.getText();
+    try {
+        return buscarNomePorEmail(txtEmail.getText());
+    } catch (IOException e) {
+        return txtEmail.getText(); // fallback
+    }
 }
-
+    
+    private String buscarNomePorEmail(String email) throws IOException {
+    try (BufferedReader br = new BufferedReader(new FileReader("usuarios.txt"))) {
+        String linha;
+        while ((linha = br.readLine()) != null) {
+            String[] partes = linha.split(";");
+            if (partes.length == 3 && partes[1].equals(email)) {
+                return partes[0]; // retorna o nome
+            }
+        }
+    }
+    return email; // fallback: se não achar, usa o email
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -178,7 +196,6 @@ public class Login extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         String email = txtEmail.getText();
         boolean rememberMe = jCheckBox1.isSelected();
         AppPreferences.saveUserEmail(email, rememberMe);
@@ -199,9 +216,12 @@ try {
     
     if (autenticado) {
         JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
-        new Conexao().setVisible(true);
+        String nomeUsuario = buscarNomePorEmail(email);
+        Conexao conexao = new Conexao(nomeUsuario);
+        conexao.setVisible(true);
+        
         Main main = (Main) SwingUtilities.getWindowAncestor(this);
-        main.trocarTela(new Conexao()); 
+        main.trocarTela(conexao); 
 
     } else {
         JOptionPane.showMessageDialog(null, "Email ou senha incorretos.");
