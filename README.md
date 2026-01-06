@@ -69,7 +69,7 @@ O projeto foi desenvolvido como exercício prático no **Apache NetBeans**, util
 1. Certifique-se de ter o **JDK 23** instalado  
 2. Clone o repositório:  
    ```bash
-   git clone https://github.com/Christopher-m-oliver/projeto_x.git
+   git clone https://github.com/Christopher-m-oliver/chat-java-swing.git
    ```  
 3. Abra o projeto no **Apache NetBeans**  
 4. Execute primeiro a classe do **Servidor**  
